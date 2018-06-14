@@ -5,24 +5,66 @@ using UnityEngine;
 public class SpawnPlataformas : MonoBehaviour
 {
 
-    public Vector3 posInicial;
-    public Vector3 posArriba;
-    public Vector3 posCheck;
-    bool subiendo = true;
+    private PoolManager myPoolManager;
 
-    public float smoothFactor = 0.5f;
+    [SerializeField] string poolNameToUse;
 
-    void Update()
+    float posX;
+    float posY;
+    float posZ;
+
+    int posArrayPool = 0;
+    bool primerPlataforma = true;
+
+    private void Start()
     {
-        if (transform.position == posInicial || subiendo)
-        {
-            transform.position = Vector3.Lerp(transform.position, posArriba, Time.deltaTime * smoothFactor);
+        myPoolManager = PoolManager.Instance;
 
-        }
-        else if(transform.position == posArriba || !subiendo)
-        {
-            subiendo = false;
-            transform.position = Vector3.Lerp(transform.position, posInicial, Time.deltaTime * smoothFactor);
-        }
+
+        StartCoroutine(CrearPlataforma());
+        //StartCoroutine(DestruirPlataforma());
+
+        posX = transform.position.x;
+        posY = transform.position.y;
+        posZ = transform.position.z;
+
     }
+
+    private void Update()
+    {
+        posX = transform.position.x;
+        posY = transform.position.y;
+        posZ = transform.position.z;
+    }
+    IEnumerator CrearPlataforma()
+    {
+        yield return new WaitForSeconds(2);
+        myPoolManager.RequestToPool(poolNameToUse, new Vector3(Random.Range(posX + 3, posX - 3), Random.Range(posY + 3, posY - 3), Random.Range(posZ + 3, posZ - 3)), new Vector3(0, 0, 0));
+        StartCoroutine(CrearPlataforma());
+    }
+
+    
+    IEnumerator DestruirPlataforma()
+    {
+        if (primerPlataforma)
+        {
+            yield return new WaitForSeconds(20);
+            primerPlataforma = false;
+        }
+        else
+        {
+            yield return new WaitForSeconds(2);
+        }
+        posArrayPool++;
+
+        myPoolManager.DeleteObjectFromPool(poolNameToUse, posArrayPool);
+
+        if (posArrayPool == 19)
+        {
+            posArrayPool = 0;
+        }
+
+        StartCoroutine(DestruirPlataforma());
+    }
+    
 }

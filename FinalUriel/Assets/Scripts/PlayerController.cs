@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Video;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,16 +23,12 @@ public class PlayerController : MonoBehaviour
     private float inputAxisY;
     private float inputAxisZ;
 
-    private float posXEnemy;
+    [SerializeField] private VideoPlayer videoPlayer;
 
     [SerializeField] Animator animator;
     [SerializeField] GameObject enemy;
 
     [SerializeField] private GameObject victoryPanel;
-
-
-    [SerializeField] private Renderer r;
-    [SerializeField] private MovieTexture movie;
 
 
 
@@ -46,9 +43,8 @@ public class PlayerController : MonoBehaviour
         }
         animator = GetComponent<Animator>();
         enemy = GetComponent<GameObject>();
+        videoPlayer = GetComponent<VideoPlayer>();
         victoryPanel.SetActive(false);
-        r = GetComponent<Renderer>();
-        MovieTexture movie = (MovieTexture)r.material.mainTexture;
     }
 
 
@@ -58,7 +54,7 @@ public class PlayerController : MonoBehaviour
         Move();
         ResetJumpCount();
 
-        posXEnemy = enemy.transform.position.x;
+
         /*
         if (Input.anyKey == false && controller.isGrounded)
         {
@@ -105,11 +101,11 @@ public class PlayerController : MonoBehaviour
             SceneManager.LoadScene("Juego", LoadSceneMode.Single);
         }
 
-        if(posXEnemy - transform.position.y < 50)
+        if(transform.position.x == enemy.transform.position.x - 20)
         {
             Time.timeScale = 0;
             victoryPanel.SetActive(true);
-            movie.Play();
+            videoPlayer.Play();
         }
 
     }

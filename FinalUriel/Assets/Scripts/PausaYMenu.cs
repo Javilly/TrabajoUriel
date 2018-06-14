@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-//[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(AudioSource))]
 public class PausaYMenu : MonoBehaviour
 {
     [SerializeField] private GameObject pausePanel;
@@ -21,8 +21,6 @@ public class PausaYMenu : MonoBehaviour
         pausePanel.SetActive(false);
     }
     
-
-    //Probé poner en Awake y en Start pero siguen desapareciendo los AudioSource, Si se arregla se pueden voler a poner el Stop y el Player de abajo
     void Awake()
     {
         audioMenu = GetComponent<AudioSource>();
